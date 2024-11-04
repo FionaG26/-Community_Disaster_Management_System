@@ -1,18 +1,18 @@
+// src/App.js
+
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import logger from './loggingService';
 import Dashboard from './components/Dashboard';
 import IncidentForm from './components/IncidentForm';
-import logger from './loggingService';
+import VolunteerRegistration from './components/VolunteerRegistration';
+import IncidentDetails from './components/IncidentDetails';
+import ContactForm from './components/ContactForm';
 
 function App() {
     useEffect(() => {
         // Log when the App component loads
         logger.logInfo('App component loaded');
-
-        // Log button click
-        const handleButtonClick = () => {
-            logger.logInfo('Button clicked', { buttonId: 'myButton' });
-        };
 
         // Example error logging
         try {
@@ -25,11 +25,12 @@ function App() {
     return (
         <Router>
             <div className="App">
-                <h1>Centralized Logging Example</h1>
-                <button id="myButton" onClick={() => logger.logInfo('Button clicked')}>Click me</button>
                 <Switch>
                     <Route exact path="/" component={Dashboard} />
                     <Route path="/report-incident" component={IncidentForm} />
+                    <Route path="/register-volunteer" component={VolunteerRegistration} />
+                    <Route path="/incident/:id" component={IncidentDetails} />
+                    <Route path="/contact" component={ContactForm} />
                 </Switch>
             </div>
         </Router>

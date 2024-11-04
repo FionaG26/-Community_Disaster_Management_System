@@ -1,5 +1,4 @@
 // src/components/ContactForm.js
-
 import React, { useState } from 'react';
 import logger from '../loggingService';
 
@@ -7,24 +6,35 @@ function ContactForm() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         logger.logInfo('Submitting contact form', { name, email });
 
-        // For simplicity, you could send this to a backend endpoint to handle
-        // For now, we'll just log it
+        // Log contact message
         logger.logInfo('Contact message submitted', { message });
 
-        // Reset form fields
-        setName('');
-        setEmail('');
-        setMessage('');
+        // Here you could also add a fetch to send the message to the backend if needed
+        try {
+            // Simulate sending a message
+            // await fetch('your_api_endpoint', { method: 'POST', body: JSON.stringify({ name, email, message }) });
+
+            // Reset form fields
+            setName('');
+            setEmail('');
+            setMessage('');
+            setErrorMessage('');
+        } catch (error) {
+            logger.logError('Error submitting contact form', { errorMessage: error.message });
+            setErrorMessage(error.message);
+        }
     };
 
     return (
         <div className="ContactForm">
             <h2>Contact Us</h2>
+            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label>Name</label>

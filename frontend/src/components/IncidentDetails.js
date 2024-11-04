@@ -1,5 +1,4 @@
 // src/components/IncidentDetails.js
-
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import logger from '../loggingService';
@@ -8,6 +7,7 @@ function IncidentDetails() {
     const { id } = useParams();
     const [incident, setIncident] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         logger.logInfo('Loading incident details', { incidentId: id });
@@ -23,6 +23,7 @@ function IncidentDetails() {
                 logger.logInfo('Fetched incident details successfully', { incidentId: data.id });
             } catch (error) {
                 logger.logError('Error fetching incident details', { errorMessage: error.message });
+                setErrorMessage(error.message);
             } finally {
                 setLoading(false);
             }
@@ -33,6 +34,10 @@ function IncidentDetails() {
 
     if (loading) {
         return <div>Loading incident details...</div>;
+    }
+
+    if (errorMessage) {
+        return <div className="alert alert-danger">{errorMessage}</div>;
     }
 
     if (!incident) {

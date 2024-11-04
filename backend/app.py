@@ -52,8 +52,8 @@ app.mount("/public", StaticFiles(directory="../frontend/public"), name="public")
 # Serve index.html for the root and any unmatched paths
 @app.get("/", response_class=FileResponse)
 async def serve_index():
-    return "../frontend/public/index.html"  # Correctly serving index.html
+    return "../frontend/public/index.html"  
 
 @app.get("/{full_path:path}", response_class=FileResponse)
 async def serve_index(full_path: str):
-    return "../frontend/public/index.html"  # Serve index.html for all other routes
+    return "../frontend/public/index.html" 

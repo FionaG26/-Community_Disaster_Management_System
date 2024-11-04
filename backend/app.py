@@ -1,8 +1,11 @@
 from fastapi import FastAPI, Request, HTTPException
+from fastapi.staticfiles import StaticFiles  # Import StaticFiles to serve static files
+from fastapi.responses import FileResponse  # Import FileResponse to serve files
 from routes import auth_routes, incident_routes, volunteer_routes
 from config import setup_database
 from logging_config import logger  # Import the logger setup from logging_config
 from pydantic import BaseModel
+import os
 
 app = FastAPI()
 
@@ -44,6 +47,14 @@ app.include_router(auth_routes.router, prefix="/api/auth")
 app.include_router(incident_routes.router, prefix="/api/incidents")
 app.include_router(volunteer_routes.router, prefix="/api/volunteers")
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to the Community Disaster Management System"}
+# Serve static files from the public folder
+app.mount("/public", StaticFiles(directory="frontend/public"), name="public")
+
+# Serve index.html for the root and any unmatched paths
+@app.get("/", response_class=FileResponse)
+async def serve_index():
+    return "frontend/public/index.html"  # Change this to return the index.html
+
+@app.get("/{full_path:path}", response_class=FileResponse)
+async def serve_index(full_path: str):
+    return "frontend/public/index.html"  # Serve index.html for all other routes

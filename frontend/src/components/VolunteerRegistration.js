@@ -1,11 +1,11 @@
 // src/components/VolunteerRegistration.js
-
 import React, { useState } from 'react';
 import logger from '../loggingService';
 
 function VolunteerRegistration() {
     const [username, setUsername] = useState('');
     const [contactInfo, setContactInfo] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,14 +29,17 @@ function VolunteerRegistration() {
             // Reset form fields
             setUsername('');
             setContactInfo('');
+            setErrorMessage('');
         } catch (error) {
             logger.logError('Error registering volunteer', { errorMessage: error.message });
+            setErrorMessage(error.message);
         }
     };
 
     return (
         <div className="VolunteerRegistration">
             <h2>Volunteer Registration</h2>
+            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label>Username</label>

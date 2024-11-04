@@ -19,6 +19,22 @@ class Incident(Base):
     severity = Column(String)
     status = Column(String)
 
+class Resource(Base):
+    __tablename__ = "resources"
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    quantity = Column(Integer)
+    location = Column(String)
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+
+class Notification(Base):
+    __tablename__ = "notifications"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    incident_id = Column(Integer, ForeignKey("incidents.id"))
+    message = Column(String)
+    timestamp = Column(TIMESTAMP, server_default=func.now())
+
 # Database setup
 DATABASE_URL = "sqlite:///./cdms.db"
 engine = create_engine(DATABASE_URL)

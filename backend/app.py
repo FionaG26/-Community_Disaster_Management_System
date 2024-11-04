@@ -1,11 +1,43 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, HTTPException
 from routes import auth_routes, incident_routes, volunteer_routes
 from config import setup_database
+from logging_config import logger  # Import the logger setup from logging_config
+from pydantic import BaseModel
 
 app = FastAPI()
 
 # Database setup
 setup_database()
+
+# Middleware for request logging
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.info(f"Incoming request: {request.method} {request.url}")
+    response = await call_next(request)
+    logger.info(f"Request completed with status: {response.status_code}")
+    return response
+
+# Frontend log model
+class LogEntry(BaseModel):
+    level: str
+    message: str
+    extraData: dict
+    timestamp: str
+
+# Endpoint to receive logs from frontend
+@app.post("/api/logs")
+async def log_entry(log: LogEntry):
+    try:
+        if log.level == 'info':
+            logger.info(log.message, extra=log.extraData)
+        elif log.level == 'error':
+            logger.error(log.message, extra=log.extraData)
+        else:
+            logger.warning(log.message, extra=log.extraData)
+        return {"message": "Log received"}
+    except Exception as e:
+        logger.error(f"Failed to log entry: {e}")
+        raise HTTPException(status_code=500, detail="Failed to log entry")
 
 # Include API routes
 app.include_router(auth_routes.router, prefix="/api/auth")

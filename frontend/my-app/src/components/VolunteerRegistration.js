@@ -1,6 +1,6 @@
 // src/components/VolunteerRegistration.js
 import React, { useState } from 'react';
-import logger from '../loggingService';
+import logger from './loggingService';
 
 function VolunteerRegistration() {
     const [username, setUsername] = useState('');

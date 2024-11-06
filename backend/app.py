@@ -47,7 +47,7 @@ app.include_router(incident_routes.router, prefix="/api/incidents")
 app.include_router(volunteer_routes.router, prefix="/api/volunteers")
 
 # Serve static files from the public folder
-app.mount("/public", StaticFiles(directory="../frontend/public"), name="public")
+app.mount("/static", StaticFiles(directory="frontend/my-app/build/static"), name="static")
 
 # Serve index.html for the root and any unmatched paths
 @app.get("/", response_class=FileResponse)
@@ -56,4 +56,4 @@ async def serve_index():
 
 @app.get("/{full_path:path}", response_class=FileResponse)
 async def serve_index(full_path: str):
-    return "../frontend/public/index.html" 
+    return FileResponse("frontend/my-app/build/index.html")

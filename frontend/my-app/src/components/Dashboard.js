@@ -1,7 +1,7 @@
 // src/components/Dashboard.js
 
 import React, { useEffect, useState } from 'react';
-import logger from '../loggingService';
+import logger from './loggingService';
 
 function Dashboard() {
     const [incidents, setIncidents] = useState([]);

@@ -1,6 +1,6 @@
 // src/components/App.js
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import logger from './loggingService';
 import Dashboard from './Dashboard';
 import IncidentForm from './IncidentForm';
@@ -28,13 +28,13 @@ function App() {
             <div className="App">
                 <UserProfile /> {/* Include UserProfile before the router */}
                 <ErrorBoundary>
-                    <Switch>
-                        <Route exact path="/" component={Dashboard} />
-                        <Route path="/report-incident" component={IncidentForm} />
-                        <Route path="/register-volunteer" component={VolunteerRegistration} />
-                        <Route path="/incident/:id" component={IncidentDetails} />
-                        <Route path="/contact" component={ContactForm} />
-                    </Switch>
+                    <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/report-incident" element={<IncidentForm />} />
+                        <Route path="/register-volunteer" element={<VolunteerRegistration />} />
+                        <Route path="/incident/:id" element={<IncidentDetails />} />
+                        <Route path="/contact" element={<ContactForm />} />
+                    </Routes>
                 </ErrorBoundary>
             </div>
         </Router>

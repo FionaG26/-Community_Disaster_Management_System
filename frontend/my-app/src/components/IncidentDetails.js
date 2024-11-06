@@ -1,7 +1,7 @@
 // src/components/IncidentDetails.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import logger from '../loggingService';
+import logger from './loggingService';
 
 function IncidentDetails() {
     const { id } = useParams();

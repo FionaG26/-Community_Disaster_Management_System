@@ -1,9 +1,14 @@
-// src/App.js
+// src/components/App.js
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import logger from './loggingService';
-import { Dashboard, IncidentForm, VolunteerRegistration, IncidentDetails, ContactForm, UserProfile } from './components';
-import ErrorBoundary from './components/ErrorBoundary';  // Create an ErrorBoundary component for handling errors
+import Dashboard from './Dashboard';
+import IncidentForm from './IncidentForm';
+import VolunteerRegistration from './VolunteerRegistration';
+import IncidentDetails from './IncidentDetails';
+import ContactForm from './ContactForm';
+import UserProfile from './UserProfile';
+import ErrorBoundary from './ErrorBoundary';
 
 function App() {
     useEffect(() => {

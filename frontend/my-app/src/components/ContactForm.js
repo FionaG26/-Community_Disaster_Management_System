@@ -1,6 +1,6 @@
 // src/components/ContactForm.js
 import React, { useState } from 'react';
-import logger from '../loggingService';
+import logger from './loggingService';
 
 function ContactForm() {
     const [name, setName] = useState('');

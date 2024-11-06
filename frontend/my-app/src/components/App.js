@@ -2,12 +2,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import logger from './loggingService';
-import Dashboard from './components/Dashboard';
-import IncidentForm from './components/IncidentForm';
-import VolunteerRegistration from './components/VolunteerRegistration';
-import IncidentDetails from './components/IncidentDetails';
-import ContactForm from './components/ContactForm';
-import UserProfile from './components/UserProfile'; // Import UserProfile
+import { Dashboard, IncidentForm, VolunteerRegistration, IncidentDetails, ContactForm, UserProfile } from './components';
+import ErrorBoundary from './components/ErrorBoundary';  // Create an ErrorBoundary component for handling errors
 
 function App() {
     useEffect(() => {
@@ -25,14 +21,16 @@ function App() {
     return (
         <Router>
             <div className="App">
-                <UserProfile /> {/* Include UserProfile here, before the router */}
-                <Switch>
-                    <Route exact path="/" component={Dashboard} />
-                    <Route path="/report-incident" component={IncidentForm} />
-                    <Route path="/register-volunteer" component={VolunteerRegistration} />
-                    <Route path="/incident/:id" component={IncidentDetails} />
-                    <Route path="/contact" component={ContactForm} />
-                </Switch>
+                <UserProfile /> {/* Include UserProfile before the router */}
+                <ErrorBoundary>
+                    <Switch>
+                        <Route exact path="/" component={Dashboard} />
+                        <Route path="/report-incident" component={IncidentForm} />
+                        <Route path="/register-volunteer" component={VolunteerRegistration} />
+                        <Route path="/incident/:id" component={IncidentDetails} />
+                        <Route path="/contact" component={ContactForm} />
+                    </Switch>
+                </ErrorBoundary>
             </div>
         </Router>
     );

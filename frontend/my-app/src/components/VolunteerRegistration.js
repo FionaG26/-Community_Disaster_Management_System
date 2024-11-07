@@ -5,9 +5,19 @@ function VolunteerRegistration() {
   const [username, setUsername] = useState('');
   const [contactInfo, setContactInfo] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    // Basic form validation
+    if (!username || !contactInfo) {
+      setErrorMessage('Please fill in both fields.');
+      return;
+    }
+
     logger.logInfo('Registering volunteer', { username, contactInfo });
 
     try {
@@ -25,10 +35,12 @@ function VolunteerRegistration() {
 
       const result = await response.json();
       logger.logInfo('Volunteer registered successfully', { volunteerId: result.volunteer_id });
-      // Reset form fields
+
+      // Reset form fields and show success message
       setUsername('');
       setContactInfo('');
-      setErrorMessage('');
+      setSuccessMessage('Registration successful! Thank you for volunteering.');
+
     } catch (error) {
       logger.logError('Error registering volunteer', { errorMessage: error.message });
       setErrorMessage(error.message);
@@ -38,28 +50,40 @@ function VolunteerRegistration() {
   return (
     <div className="VolunteerRegistration mt-4">
       <h2>Volunteer Registration</h2>
+
+      {/* Success message */}
+      {successMessage && <div className="alert alert-success">{successMessage}</div>}
+
+      {/* Error message */}
       {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Username</label>
+          <label htmlFor="username">Full Name</label>
           <input
+            id="username"
             type="text"
             className="form-control"
+            placeholder="Enter your full name"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>
+
         <div className="form-group">
-          <label>Contact Info</label>
+          <label htmlFor="contactInfo">Email Address</label>
           <input
-            type="text"
+            id="contactInfo"
+            type="email"
             className="form-control"
+            placeholder="Enter your email"
             value={contactInfo}
             onChange={(e) => setContactInfo(e.target.value)}
             required
           />
         </div>
+
         <button type="submit" className="cta-button">Register</button>
       </form>
     </div>

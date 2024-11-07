@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP, Boolean, create_engine
+from sqlalchemy.orm import relationship, sessionmaker
 from datetime import datetime
 from .database import Base
 
@@ -15,6 +15,8 @@ class User(Base):
 
     # Define relationship to Incident (one user can have many incidents)
     incidents = relationship("Incident", back_populates="user", cascade="all, delete-orphan")
+    notifications = relationship("Notification", back_populates="user")
+    volunteer = relationship("Volunteer", back_populates="user", uselist=False)  # One-to-one relationship with Volunteer
 
 # Incident Model
 class Incident(Base):
@@ -30,6 +32,7 @@ class Incident(Base):
 
     # Define relationship with User (many incidents belong to one user)
     user = relationship("User", back_populates="incidents")
+    notifications = relationship("Notification", back_populates="incident")
 
 # Resource Model
 class Resource(Base):
@@ -64,18 +67,13 @@ class Notification(Base):
     user = relationship("User", back_populates="notifications")
     incident = relationship("Incident", back_populates="notifications")
 
-# Add relationships in User model for notifications and volunteer
-User.volunteer = relationship("Volunteer", back_populates="user", uselist=False)
-User.notifications = relationship("Notification", back_populates="user")
-
-# Add relationship in Incident model for notifications
-Incident.notifications = relationship("Notification", back_populates="incident")
-
 
 # Database setup
-DATABASE_URL = "sqlite:///./cdms.db"
-engine = create_engine(DATABASE_URL)
+DATABASE_URL = "sqlite:///./cdms.db"  # SQLite database (can be changed to PostgreSQL or others)
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})  # Only needed for SQLite
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def setup_database():
+    """Create all tables in the database (if not already present)."""
     Base.metadata.create_all(bind=engine)

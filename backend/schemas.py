@@ -42,7 +42,7 @@ class ResourceCreate(ResourceBase):
 
 class ResourceInDB(ResourceBase):
     id: int
-    updated_at: str
+    updated_at: datetime
 
     class Config:
         orm_mode = True
@@ -58,7 +58,7 @@ class NotificationCreate(NotificationBase):
 
 class NotificationInDB(NotificationBase):
     id: int
-    timestamp: str
+    timestamp: datetime
 
     class Config:
         orm_mode = True

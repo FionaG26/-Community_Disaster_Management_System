@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles  # Import StaticFiles to serve static files
 from fastapi.responses import FileResponse  # Import FileResponse to serve files
-from routes import auth_routes, incident_routes, volunteer_routes
+from routes import auth_routes, incident_routes, volunteer_routes, contact_routes
 from config import setup_database
 from logging_config import logger  # Import the logger setup from logging_config
 from pydantic import BaseModel

@@ -1,53 +1,76 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, create_engine, TIMESTAMP
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.sql import func
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from .database import Base
 
-Base = declarative_base()
-
+# User Model
 class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True)
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String, unique=True, index=True)
     password = Column(String)
-    role = Column(String)  # e.g., "admin", "volunteer", "user"
+    role = Column(String)
+    contact_info = Column(String)
 
+    # Define relationship to Incident (one user can have many incidents)
+    incidents = relationship("Incident", back_populates="user", cascade="all, delete-orphan")
+
+# Incident Model
 class Incident(Base):
-    __tablename__ = "incidents"
+    __tablename__ = 'incidents'
 
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    location = Column(String, index=True)
-    description = Column(String)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    location = Column(String)
+    description = Column(Text)
     severity = Column(String)
     status = Column(String)
-    created_at = Column(TIMESTAMP, server_default=func.now())  # Added created_at
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
 
+    # Define relationship with User (many incidents belong to one user)
     user = relationship("User", back_populates="incidents")
 
-class Volunteer(Base):
-    __tablename__ = "volunteers"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    phone = Column(String)
-    email = Column(String)
-    role = Column(String)
-
+# Resource Model
 class Resource(Base):
-    __tablename__ = "resources"
-    id = Column(Integer, primary_key=True)
+    __tablename__ = 'resources'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
     quantity = Column(Integer)
     location = Column(String)
-    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
 
+# Volunteer Model
+class Volunteer(Base):
+    __tablename__ = 'volunteers'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    availability = Column(Boolean)
+
+    # Relationship to User (a volunteer is a user)
+    user = relationship("User", back_populates="volunteer")
+
+# Notification Model
 class Notification(Base):
-    __tablename__ = "notifications"
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    incident_id = Column(Integer, ForeignKey("incidents.id"))
+    __tablename__ = 'notifications'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    incident_id = Column(Integer, ForeignKey('incidents.id'))
     message = Column(String)
-    timestamp = Column(TIMESTAMP, server_default=func.now())
+
+    # Relationships to User and Incident
+    user = relationship("User", back_populates="notifications")
+    incident = relationship("Incident", back_populates="notifications")
+
+# Add relationships in User model for notifications and volunteer
+User.volunteer = relationship("Volunteer", back_populates="user", uselist=False)
+User.notifications = relationship("Notification", back_populates="user")
+
+# Add relationship in Incident model for notifications
+Incident.notifications = relationship("Notification", back_populates="incident")
+
 
 # Database setup
 DATABASE_URL = "sqlite:///./cdms.db"

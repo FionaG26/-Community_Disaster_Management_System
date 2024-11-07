@@ -20,7 +20,7 @@ class IncidentResponse(BaseModel):
     description: str
     severity: str
     status: str
-    created_at: Optional[str]  # Adjust if you have a timestamp field
+    created_at: datetime
 
     class Config:
         orm_mode = True  # Enable compatibility with SQLAlchemy models
@@ -80,7 +80,12 @@ def update_incident_status(incident_id: int, status: str):
         if not incident:
             logger.warning(f"Incident with ID {incident_id} not found")
             raise HTTPException(status_code=404, detail="Incident not found")
-        
+
+        # Validate status
+        valid_statuses = ['reported', 'in progress', 'resolved']
+        if status not in valid_statuses:
+            raise HTTPException(status_code=400, detail="Invalid status")
+
         # Update the incident status
         incident.status = status
         db.commit()

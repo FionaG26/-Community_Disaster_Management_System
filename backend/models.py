@@ -20,6 +20,14 @@ class Incident(Base):
     severity = Column(String)
     status = Column(String)
 
+class Volunteer(Base):
+    __tablename__ = "volunteers"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    phone = Column(String)
+    email = Column(String)
+    role = Column(String)
+
 class Resource(Base):
     __tablename__ = "resources"
     id = Column(Integer, primary_key=True)

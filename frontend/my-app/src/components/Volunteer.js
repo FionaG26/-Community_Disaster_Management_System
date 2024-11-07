@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import VolunteerRegistration from './VolunteerRegistration'; // Import VolunteerRegistration
+import SignInForm from './SignInForm'; // Import SignInForm
 
 const Volunteer = () => {
-  const [showForm, setShowForm] = useState(false); // State to control form visibility
+  const [formType, setFormType] = useState('register'); // State to toggle between register and sign in form
 
-  // Toggle the visibility of the VolunteerRegistration form
+  // Toggle between Register and Sign In forms
   const toggleForm = () => {
-    setShowForm(!showForm);
+    setFormType(formType === 'register' ? 'signin' : 'register');
   };
 
   return (
@@ -16,11 +17,11 @@ const Volunteer = () => {
 
       {/* Main Call-to-Action Button */}
       <button className="cta-button" onClick={toggleForm}>
-        {showForm ? 'Cancel Registration' : 'Sign Up to Volunteer'}
+        {formType === 'register' ? 'Already a volunteer? Sign In' : 'New Volunteer? Register'}
       </button>
 
-      {/* Conditionally Render VolunteerRegistration Form */}
-      {showForm && <VolunteerRegistration />}
+      {/* Conditionally Render Register or Sign In Form */}
+      {formType === 'register' ? <VolunteerRegistration /> : <SignInForm />}
     </section>
   );
 };

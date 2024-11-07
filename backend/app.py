@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles  # Import StaticFiles to serve static files
 from fastapi.responses import FileResponse  # Import FileResponse to serve files

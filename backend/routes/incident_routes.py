@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from models import SessionLocal, Incident
 from logging_config import logger  # Import logger
 from typing import List, Optional
+from datetime import datetime
 
 router = APIRouter()
 

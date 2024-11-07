@@ -1,9 +1,9 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import List, Optional
 
+# User Schemas
 class UserBase(BaseModel):
     username: str
-    email: str
     role: str
 
 class UserCreate(UserBase):
@@ -11,21 +11,70 @@ class UserCreate(UserBase):
 
 class UserInDB(UserBase):
     id: int
-    is_active: bool
 
     class Config:
         orm_mode = True
 
+# Incident Schemas
 class IncidentBase(BaseModel):
-    description: str
     location: str
+    description: str
+    severity: str
+    status: str
 
 class IncidentCreate(IncidentBase):
     pass
 
 class IncidentInDB(IncidentBase):
     id: int
+
+    class Config:
+        orm_mode = True
+
+# Resource Schemas
+class ResourceBase(BaseModel):
+    name: str
+    quantity: int
+    location: str
+
+class ResourceCreate(ResourceBase):
+    pass
+
+class ResourceInDB(ResourceBase):
+    id: int
+    updated_at: str
+
+    class Config:
+        orm_mode = True
+
+# Notification Schemas
+class NotificationBase(BaseModel):
+    message: str
     user_id: int
+    incident_id: int
+
+class NotificationCreate(NotificationBase):
+    pass
+
+class NotificationInDB(NotificationBase):
+    id: int
+    timestamp: str
+
+    class Config:
+        orm_mode = True
+
+# Volunteer Schemas
+class VolunteerBase(BaseModel):
+    name: str
+    phone: str
+    email: str
+    role: str
+
+class VolunteerCreate(VolunteerBase):
+    pass
+
+class VolunteerInDB(VolunteerBase):
+    id: int
 
     class Config:
         orm_mode = True

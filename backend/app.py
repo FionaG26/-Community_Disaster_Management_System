@@ -52,11 +52,8 @@ app.mount(
     StaticFiles(directory=os.path.join("..", "frontend", "my-app", "build", "static")),
     name="static"
 )
-# Serve index.html for the root and any unmatched paths
-@app.get("/", response_class=FileResponse)
-async def serve_index():
-    return "../frontend/public/index.html"  
 
-@app.get("/{full_path:path}", response_class=FileResponse)
-async def serve_index(full_path: str):
-    return FileResponse("frontend/my-app/build/index.html")
+@app.get("/")
+async def serve_index():
+    index_path = os.path.join("..", "frontend", "my-app", "build", "index.html")
+    return FileResponse(index_path))

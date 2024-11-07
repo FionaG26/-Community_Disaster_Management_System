@@ -14,11 +14,16 @@ class User(Base):
 
 class Incident(Base):
     __tablename__ = "incidents"
-    id = Column(Integer, primary_key=True)
-    location = Column(String)
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    location = Column(String, index=True)
     description = Column(String)
     severity = Column(String)
     status = Column(String)
+    created_at = Column(TIMESTAMP, server_default=func.now())  # Added created_at
+
+    user = relationship("User", back_populates="incidents")
 
 class Volunteer(Base):
     __tablename__ = "volunteers"

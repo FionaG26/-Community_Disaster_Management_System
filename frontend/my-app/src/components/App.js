@@ -6,6 +6,7 @@ import Services from './Services';
 import IncidentReport from './IncidentReport';
 import IncidentList from './IncidentList';
 import UpdateIncidentStatus from './UpdateIncidentStatus';
+import ResourceList from './ResourceList;
 import Volunteer from './Volunteer';
 import Contact from './Contact';
 import Footer from './Footer';
@@ -19,6 +20,7 @@ const App = () => (
     <IncidentReport/>
     <IncidentList/>
     <UpdateIncidentStatus/>
+    <ResourceList/>
     <Volunteer />
     <Contact />
     <Footer />

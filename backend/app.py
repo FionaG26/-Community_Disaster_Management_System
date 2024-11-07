@@ -56,4 +56,4 @@ app.mount(
 @app.get("/")
 async def serve_index():
     index_path = os.path.join("..", "frontend", "my-app", "build", "index.html")
-    return FileResponse(index_path))
+    return FileResponse(index_path)  # Fixed the unmatched parenthesis here

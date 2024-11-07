@@ -1,5 +1,4 @@
 import React from 'react';
-import VolunteerRegistration from './VolunteerRegistration';
 
 const Volunteer = () => (
   <section id="volunteer" className="container py-5">

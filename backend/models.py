@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP, Boolean, create_engine
 from sqlalchemy.orm import relationship, sessionmaker
 from datetime import datetime
-from backend.database import Base
+from config import Base
 
 # User Model
 class User(Base):

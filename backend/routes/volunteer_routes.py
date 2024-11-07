@@ -85,3 +85,67 @@ def sign_in(volunteer: SignInRequest):
     
     logger.info(f"Volunteer {volunteer.username} signed in successfully")
     return {"access_token": access_token, "token_type": "bearer"}
+
+# Route to get all volunteers
+@router.get("/")
+def get_all_volunteers():
+    logger.info("Fetching all volunteers")
+    db = SessionLocal()
+    volunteers = db.query(User).filter(User.role == "volunteer").all()
+    return volunteers
+
+# Route to get a specific volunteer's details
+@router.get("/{volunteer_id}")
+def get_volunteer(volunteer_id: int):
+    logger.info(f"Fetching details for volunteer ID: {volunteer_id}")
+    db = SessionLocal()
+    volunteer = db.query(User).filter(User.id == volunteer_id).first()
+    if not volunteer:
+        logger.warning(f"Volunteer with ID {volunteer_id} not found")
+        raise HTTPException(status_code=404, detail="Volunteer not found")
+    return volunteer
+
+# Route to update volunteer availability
+@router.put("/{volunteer_id}/availability")
+def update_volunteer_availability(volunteer_id: int, available: bool):
+    logger.info(f"Updating availability for volunteer ID {volunteer_id} to {'available' if available else 'not available'}")
+    db = SessionLocal()
+    volunteer = db.query(User).filter(User.id == volunteer_id).first()
+    if not volunteer:
+        logger.warning(f"Volunteer with ID {volunteer_id} not found")
+        raise HTTPException(status_code=404, detail="Volunteer not found")
+    volunteer.available = available
+    db.commit()
+    logger.info(f"Volunteer ID {volunteer_id} availability updated to {available}")
+    return {"message": "Volunteer availability updated successfully"}
+
+# Route to update volunteer details
+@router.put("/{volunteer_id}")
+def update_volunteer(volunteer_id: int, volunteer: VolunteerCreate):
+    logger.info(f"Updating details for volunteer ID {volunteer_id}")
+    db = SessionLocal()
+    existing_volunteer = db.query(User).filter(User.id == volunteer_id).first()
+    if not existing_volunteer:
+        logger.warning(f"Volunteer with ID {volunteer_id} not found")
+        raise HTTPException(status_code=404, detail="Volunteer not found")
+    
+    existing_volunteer.username = volunteer.username
+    existing_volunteer.contact_info = volunteer.contact_info
+    db.commit()
+    db.refresh(existing_volunteer)
+    logger.info(f"Volunteer ID {volunteer_id} details updated successfully")
+    return {"message": "Volunteer details updated successfully"}
+
+# Route to delete a volunteer
+@router.delete("/{volunteer_id}")
+def delete_volunteer(volunteer_id: int):
+    logger.info(f"Deleting volunteer ID {volunteer_id}")
+    db = SessionLocal()
+    volunteer = db.query(User).filter(User.id == volunteer_id).first()
+    if not volunteer:
+        logger.warning(f"Volunteer with ID {volunteer_id} not found")
+        raise HTTPException(status_code=404, detail="Volunteer not found")
+    db.delete(volunteer)
+    db.commit()
+    logger.info(f"Volunteer ID {volunteer_id} deleted successfully")
+    return {"message": "Volunteer deleted successfully"}

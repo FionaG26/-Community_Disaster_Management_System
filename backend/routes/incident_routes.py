@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from models import SessionLocal, Incident
 from logging_config import logger  # Import logger
-from typing import List
+from typing import List, Optional
 
 router = APIRouter()
 
@@ -12,6 +12,18 @@ class IncidentCreate(BaseModel):
     location: str
     description: str
     severity: str
+
+# Pydantic model for incident response
+class IncidentResponse(BaseModel):
+    id: int
+    location: str
+    description: str
+    severity: str
+    status: str
+    created_at: Optional[str]  # Adjust if you have a timestamp field
+
+    class Config:
+        orm_mode = True  # Enable compatibility with SQLAlchemy models
 
 @router.post("/report", status_code=status.HTTP_201_CREATED)
 def report_incident(incident: IncidentCreate):
@@ -38,7 +50,7 @@ def report_incident(incident: IncidentCreate):
     finally:
         db.close()
 
-@router.get("/", response_model=List[Incident])
+@router.get("/", response_model=List[IncidentResponse])
 def get_all_incidents():
     """
     Fetch all incidents from the system.
